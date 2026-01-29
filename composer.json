@@ -1,19 +1,19 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "vendor_slug/package_slug",
-    "description": "package_description",
-    "homepage": "https://github.com/vendor_slug/package_slug",
+    "name": "juniorfontenele/laravel-exceptions",
+    "description": "Exceptions on steroids for Laravel",
+    "homepage": "https://github.com/juniorfontenele/laravel-exceptions",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "VendorName\\PackageName\\": "src/"
+            "JuniorFontenele\\LaravelExceptions\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "author_name",
-            "email": "author_email@authordomain.com"
+            "name": "Junior Fontenele",
+            "email": "git@juniorfontenele.com.br"
         }
     ],
     "require": {
@@ -24,10 +24,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\PackageName\\PackageNameServiceProvider"
+                "JuniorFontenele\\LaravelExceptions\\LaravelExceptionsServiceProvider"
             ],
             "aliases": {
-                "PackageName": "VendorName\\PackageName\\Facades\\PackageName"
+                "LaravelExceptions": "JuniorFontenele\\LaravelExceptions\\Facades\\LaravelExceptions"
             },
             "branch-alias": {
                 "dev-main": "1.x-dev",
