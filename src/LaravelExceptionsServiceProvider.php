@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelExceptions;
 
 use Illuminate\Support\ServiceProvider;
+use JuniorFontenele\LaravelExceptions\Models\ExceptionLog;
+use JuniorFontenele\LaravelExceptions\Models\ExceptionModel;
 
 class LaravelExceptionsServiceProvider extends ServiceProvider
 {
@@ -28,5 +30,11 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/laravel-exceptions.php', 'laravel-exceptions');
+
+        $this->app->bind(ExceptionModel::class, function ($app) {
+            $exceptionModel = $app['config']->get('laravel-exceptions.model', ExceptionLog::class);
+
+            return $app->make($exceptionModel);
+        });
     }
 }
