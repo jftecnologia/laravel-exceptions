@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelExceptions;
 
 use Illuminate\Support\ServiceProvider;
+use JuniorFontenele\LaravelExceptions\Console\Commands\InstallCommand;
 use JuniorFontenele\LaravelExceptions\Models\ExceptionLog;
 use JuniorFontenele\LaravelExceptions\Models\ExceptionModel;
 
@@ -40,6 +41,12 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../lang' => $this->app->langPath('vendor/laravel-exceptions'),
         ], 'laravel-exceptions-translations');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommand::class,
+            ]);
+        }
     }
 
     /**
