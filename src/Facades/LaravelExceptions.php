@@ -10,6 +10,6 @@ class LaravelExceptions extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \JuniorFontenele\LaravelExceptions\LaravelExceptions::class;
+        return \JuniorFontenele\LaravelExceptions\ExceptionHandler::class;
     }
 }
