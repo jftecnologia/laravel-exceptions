@@ -6,8 +6,9 @@ namespace JuniorFontenele\LaravelExceptions\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use JuniorFontenele\LaravelExceptions\Contracts\ExceptionModel;
 
-class Exception extends Model
+class Exception extends Model implements ExceptionModel
 {
     protected static function booted(): void
     {

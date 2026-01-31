@@ -4,8 +4,10 @@ declare(strict_types = 1);
 
 namespace JuniorFontenele\LaravelExceptions;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelExceptions\Console\Commands\InstallCommand;
+use JuniorFontenele\LaravelExceptions\Contracts\ExceptionModel;
 
 class LaravelExceptionsServiceProvider extends ServiceProvider
 {
@@ -60,5 +62,45 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
         );
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        $this->app->bind(ExceptionModel::class, function ($app) {
+            $modelClass = $app->make('config')->get('laravel-exceptions.channels_settings.database.model');
+
+            if (! is_string($modelClass)) {
+                throw new \RuntimeException('The exception_model configuration must be a valid class name.');
+            }
+
+            if (! class_exists($modelClass)) {
+                throw new \RuntimeException("The exception model class {$modelClass} does not exist.");
+            }
+
+            if (! is_subclass_of($modelClass, Model::class)) {
+                throw new \RuntimeException("The exception model class {$modelClass} must extend " . Model::class . '.');
+            }
+
+            /** @var class-string<Model> $modelClass */
+            return new $modelClass();
+        });
+
+        $this->app->singleton(function ($app): ExceptionManager {
+            $config = $app->make('config')->get('laravel-exceptions');
+
+            $manager = new ExceptionManager(
+                ignoredExceptions: $config['ignored_exceptions'],
+                errorView: $config['view'],
+            );
+
+            foreach ($config['context_providers'] as $providerClass) {
+                $provider = $app->make($providerClass);
+                $manager->addContextProvider($provider);
+            }
+
+            foreach ($config['channels'] as $channelClass) {
+                $channel = $app->make($channelClass);
+                $manager->addChannel($channel);
+            }
+
+            return $manager;
+        });
     }
 }

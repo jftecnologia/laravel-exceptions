@@ -12,6 +12,6 @@ Route::get('/error', function () {
 
     return view('laravel-exceptions::error', [
         'code' => 500,
-        'message' => 'Internal Server Error',
+        'message' => __('laravel-exceptions::exceptions.user.app'),
     ]);
 });

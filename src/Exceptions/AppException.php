@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace JuniorFontenele\Exceptions;
+namespace JuniorFontenele\LaravelExceptions\Exceptions;
 
 use Exception;
 use Illuminate\Support\Facades\Auth;
