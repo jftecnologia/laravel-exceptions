@@ -7,6 +7,7 @@ namespace JuniorFontenele\LaravelExceptions;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelExceptions\Channels\Database;
+use JuniorFontenele\LaravelExceptions\Console\Commands\AppExceptionMakeCommand;
 use JuniorFontenele\LaravelExceptions\Console\Commands\InstallCommand;
 use JuniorFontenele\LaravelExceptions\Models\Exception;
 use Psr\Log\LoggerInterface;
@@ -38,6 +39,10 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/dist/css/app.css' => public_path('vendor/juniorfontenele/laravel-exceptions/css/app.css'),
         ], 'laravel-exceptions-assets');
 
+        $this->publishes([
+            __DIR__ . '/../stubs/app-exception.stub' => base_path('stubs/app-exception.stub'),
+        ], 'laravel-exceptions-stubs');
+
         $this->loadTranslationsFrom(__DIR__ . '/../lang', 'laravel-exceptions');
 
         $this->publishes([
@@ -47,6 +52,7 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 InstallCommand::class,
+                AppExceptionMakeCommand::class,
             ]);
         }
     }
@@ -77,6 +83,8 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(function (Application $app): ExceptionManager {
+            $shouldConvertExceptions = $app['config']->boolean('laravel-exceptions.convert_exceptions', true);
+            $shouldRenderInDebug = $app['config']->boolean('laravel-exceptions.render_in_debug', false);
             $ignoredExceptions = $app['config']->get('laravel-exceptions.ignored_exceptions', []);
             $errorView = $app['config']->get('laravel-exceptions.view', 'laravel-exceptions::error');
             $contextProviders = $app['config']->get('laravel-exceptions.context_providers', []);
@@ -85,6 +93,8 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
             $manager = new ExceptionManager(
                 ignoredExceptions: $ignoredExceptions,
                 errorView: $errorView,
+                shouldConvertExceptions: $shouldConvertExceptions,
+                shouldRenderInDebug: $shouldRenderInDebug,
             );
 
             foreach ($contextProviders as $providerClass) {

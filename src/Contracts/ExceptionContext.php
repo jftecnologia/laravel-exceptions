@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace JuniorFontenele\LaravelExceptions\Contracts;
 
-use JuniorFontenele\LaravelExceptions\Exceptions\AppException;
+use Throwable;
 
 interface ExceptionContext
 {
-    public function getContext(?AppException $exception = null): array;
+    public function getContext(Throwable $exception): array;
 
-    public function shouldRun(?AppException $exception = null): bool;
+    public function shouldRun(Throwable $exception): bool;
 }

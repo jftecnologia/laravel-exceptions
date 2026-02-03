@@ -5,17 +5,12 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelExceptions\Providers;
 
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionContext;
-use JuniorFontenele\LaravelExceptions\Exceptions\AppException;
 use Throwable;
 
 class PreviousExceptionContextProvider implements ExceptionContext
 {
-    public function getContext(?AppException $exception = null): array
+    public function getContext(Throwable $exception): array
     {
-        if ($exception === null || ! ($exception->getPrevious() instanceof Throwable)) {
-            return [];
-        }
-
         return [
             'previous_exception' => [
                 'class' => get_class($exception->getPrevious()),
@@ -28,8 +23,8 @@ class PreviousExceptionContextProvider implements ExceptionContext
         ];
     }
 
-    public function shouldRun(?AppException $exception = null): bool
+    public function shouldRun(Throwable $exception): bool
     {
-        return $exception !== null && $exception->getPrevious() instanceof Throwable;
+        return $exception->getPrevious() instanceof Throwable;
     }
 }

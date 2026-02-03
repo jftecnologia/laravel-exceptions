@@ -5,11 +5,16 @@ declare(strict_types = 1);
 return [
     'view' => 'laravel-exceptions::error',
 
+    'convert_exceptions' => env('LARAVEL_EXCEPTIONS_CONVERT_EXCEPTIONS', true),
+
+    'render_in_debug' => env('LARAVEL_EXCEPTIONS_RENDER_IN_DEBUG', false),
+
     'context_providers' => [
-        JuniorFontenele\LaravelExceptions\Providers\ExceptionContextProvider::class,
+        JuniorFontenele\LaravelExceptions\Providers\AppExceptionContextProvider::class,
         JuniorFontenele\LaravelExceptions\Providers\AppContextProvider::class,
         JuniorFontenele\LaravelExceptions\Providers\HostContextProvider::class,
         JuniorFontenele\LaravelExceptions\Providers\UserContextProvider::class,
+        JuniorFontenele\LaravelExceptions\Providers\ExceptionContextProvider::class,
         JuniorFontenele\LaravelExceptions\Providers\PreviousExceptionContextProvider::class,
     ],
 
@@ -22,6 +27,7 @@ return [
             'table_name' => 'exceptions_log',
             'model' => JuniorFontenele\LaravelExceptions\Models\Exception::class,
             'user_model' => config('auth.providers.users.model'),
+            'user_model_table' => 'users',
         ],
     ],
 

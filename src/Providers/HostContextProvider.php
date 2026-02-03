@@ -5,19 +5,21 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelExceptions\Providers;
 
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionContext;
-use JuniorFontenele\LaravelExceptions\Exceptions\AppException;
+use Throwable;
 
 class HostContextProvider implements ExceptionContext
 {
-    public function getContext(?AppException $exception = null): array
+    public function getContext(Throwable $exception): array
     {
-        return $exception === null ? [] : [
-            'host' => gethostname(),
-            'ip' => gethostbyname(gethostname()),
+        return [
+            'host' => [
+                'name' => gethostname(),
+                'ip' => gethostbyname(gethostname()),
+            ],
         ];
     }
 
-    public function shouldRun(?AppException $exception = null): bool
+    public function shouldRun(Throwable $exception): bool
     {
         return true;
     }

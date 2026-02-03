@@ -5,29 +5,28 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelExceptions\Providers;
 
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionContext;
-use JuniorFontenele\LaravelExceptions\Exceptions\AppException;
+use Throwable;
 
 class ExceptionContextProvider implements ExceptionContext
 {
-    public function getContext(?AppException $exception = null): array
+    public function getContext(Throwable $exception): array
     {
-        return $exception === null ? [] : [
-            'error_id' => $exception->getErrorId(),
-            'exception_class' => get_class($exception),
-            'message' => $exception->getMessage(),
-            'user_message' => $exception->getUserMessage(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
-            'code' => $exception->getCode(),
-            'status_code' => $exception->getStatusCode(),
-            'is_retryable' => $exception->isRetryable(),
-            'context' => $exception->context(),
-            'stack_trace' => $exception->getTraceAsString(),
+        $context = [
+            'exception_detail' => [
+                'class' => get_class($exception),
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'code' => $exception->getCode(),
+                'stack_trace' => $exception->getTraceAsString(),
+            ],
         ];
+
+        return $context;
     }
 
-    public function shouldRun(?AppException $exception = null): bool
+    public function shouldRun(Throwable $exception): bool
     {
-        return $exception instanceof AppException;
+        return true;
     }
 }

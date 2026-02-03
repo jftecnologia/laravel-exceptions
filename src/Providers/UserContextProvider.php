@@ -6,18 +6,22 @@ namespace JuniorFontenele\LaravelExceptions\Providers;
 
 use Illuminate\Support\Facades\Auth;
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionContext;
-use JuniorFontenele\LaravelExceptions\Exceptions\AppException;
+use Throwable;
 
 class UserContextProvider implements ExceptionContext
 {
-    public function getContext(?AppException $exception = null): array
+    public function getContext(Throwable $exception): array
     {
-        return $exception === null ? [] : [
-            'user_id' => Auth::id(),
+        return [
+            'user' => [
+                'id' => Auth::id(),
+                'name' => Auth::user()?->name,
+                'email' => Auth::user()?->email,
+            ],
         ];
     }
 
-    public function shouldRun(?AppException $exception = null): bool
+    public function shouldRun(Throwable $exception): bool
     {
         return Auth::check();
     }

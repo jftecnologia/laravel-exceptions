@@ -5,19 +5,21 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelExceptions\Providers;
 
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionContext;
-use JuniorFontenele\LaravelExceptions\Exceptions\AppException;
+use Throwable;
 
 class AppContextProvider implements ExceptionContext
 {
-    public function getContext(?AppException $exception = null): array
+    public function getContext(Throwable $exception): array
     {
-        return $exception === null ? [] : [
-            'app_env' => app()->environment(),
-            'app_debug' => app()->hasDebugModeEnabled(),
+        return [
+            'app' => [
+                'env' => app()->environment(),
+                'debug' => app()->hasDebugModeEnabled(),
+            ],
         ];
     }
 
-    public function shouldRun(?AppException $exception = null): bool
+    public function shouldRun(Throwable $exception): bool
     {
         return true;
     }

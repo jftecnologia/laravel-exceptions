@@ -28,9 +28,8 @@ return new class extends Migration
             $table->string('host_name')->nullable();
             $table->string('host_ip')->nullable();
             $table->foreignId('user_id')->nullable()->constrained(config('laravel-exceptions.channels_settings.database.user_model_table', 'users'))->nullOnDelete();
-            $table->boolean('is_retryable')->index();
+            $table->boolean('is_retryable')->nullable()->index();
             $table->longText('stack_trace')->nullable();
-            $table->json('context')->nullable();
             $table->string('previous_exception_class')->nullable()->index();
             $table->longText('previous_message')->nullable();
             $table->text('previous_file')->nullable();
