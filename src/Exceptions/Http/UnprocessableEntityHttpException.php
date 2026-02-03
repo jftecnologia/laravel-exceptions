@@ -10,7 +10,6 @@ use Throwable;
 class UnprocessableEntityHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class UnprocessableEntityHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 422,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.unprocessable_entity', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.unprocessable_entity', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.unprocessable_entity');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.unprocessable_entity');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }

@@ -89,13 +89,9 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
             $errorView = $app['config']->get('laravel-exceptions.view', 'laravel-exceptions::error');
             $contextProviders = $app['config']->get('laravel-exceptions.context_providers', []);
             $channels = $app['config']->get('laravel-exceptions.channels', []);
+            $config = $app['config']->get('laravel-exceptions', []);
 
-            $manager = new ExceptionManager(
-                ignoredExceptions: $ignoredExceptions,
-                errorView: $errorView,
-                shouldConvertExceptions: $shouldConvertExceptions,
-                shouldRenderInDebug: $shouldRenderInDebug,
-            );
+            $manager = new ExceptionManager($config);
 
             foreach ($contextProviders as $providerClass) {
                 $provider = $app->make($providerClass);

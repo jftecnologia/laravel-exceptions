@@ -10,7 +10,6 @@ use Throwable;
 class BadRequestHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class BadRequestHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 400,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.bad_request', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.bad_request', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.bad_request');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.bad_request');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }

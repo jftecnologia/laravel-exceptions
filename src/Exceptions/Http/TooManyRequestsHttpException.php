@@ -10,7 +10,6 @@ use Throwable;
 class TooManyRequestsHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class TooManyRequestsHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 429,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.too_many_requests', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.too_many_requests', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.too_many_requests');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.too_many_requests');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }

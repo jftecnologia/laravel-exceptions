@@ -10,7 +10,6 @@ use Throwable;
 class UnauthorizedHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class UnauthorizedHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 401,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.unauthorized', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.unauthorized', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.unauthorized');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.unauthorized');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }

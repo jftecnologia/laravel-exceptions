@@ -10,7 +10,6 @@ use Throwable;
 class MethodNotAllowedHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class MethodNotAllowedHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 405,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.method_not_allowed', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.method_not_allowed', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.method_not_allowed');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.method_not_allowed');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }

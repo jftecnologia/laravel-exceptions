@@ -10,7 +10,6 @@ use Throwable;
 class ServiceUnavailableHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class ServiceUnavailableHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 503,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.service_unavailable', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.service_unavailable', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.service_unavailable');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.service_unavailable');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }

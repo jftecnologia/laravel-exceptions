@@ -10,7 +10,6 @@ use Throwable;
 class NotFoundHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class NotFoundHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 404,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.not_found', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.not_found', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.not_found');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.not_found');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }

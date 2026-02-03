@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionChannel;
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionContext;
 use JuniorFontenele\LaravelExceptions\Exceptions\AppException;
+use JuniorFontenele\LaravelExceptions\Exceptions\HttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException as SymfonyHttpException;
 use Throwable;
 
@@ -24,12 +25,24 @@ class ExceptionManager
 
     protected bool $hasBuiltContext = false;
 
+    protected array $ignoredExceptions;
+
+    protected string $errorView;
+
+    protected bool $shouldConvertExceptions;
+
+    protected bool $shouldRenderInDebug;
+
+    protected array $httpExceptions;
+
     public function __construct(
-        protected array $ignoredExceptions = [],
-        protected string $errorView = 'laravel-exceptions::error',
-        protected bool $shouldConvertExceptions = true,
-        protected bool $shouldRenderInDebug = false,
+        protected array $config = [],
     ) {
+        $this->ignoredExceptions = $config['ignored_exceptions'] ?? [];
+        $this->errorView = $config['view'] ?? 'laravel-exceptions::error';
+        $this->shouldConvertExceptions = $config['convert_exceptions'] ?? true;
+        $this->shouldRenderInDebug = $config['render_in_debug'] ?? false;
+        $this->httpExceptions = $config['http_exceptions'] ?? [];
     }
 
     public function addContextProvider(ExceptionContext $provider): static
@@ -150,16 +163,17 @@ class ExceptionManager
             return $exception;
         }
 
-        // if ($exception instanceof SymfonyHttpException) {
-        //     return match ($exception->getStatusCode()) {
-        //         404 => new NotFoundHttpException(previous: $exception->getPrevious()),
-        //         401 => new UnauthorizedHttpException(previous: $exception->getPrevious()),
-        //         403 => new ForbiddenHttpException(previous: $exception->getPrevious()),
-        //         500 => new InternalServerErrorHttpException(previous: $exception->getPrevious()),
-        //         503 => new ServiceUnavailableHttpException(previous: $exception->getPrevious()),
-        //         default => new AppException(previous: $exception->getPrevious()),
-        //     };
-        // }
+        if ($exception instanceof SymfonyHttpException) {
+            if (! array_key_exists((int) $exception->getStatusCode(), $this->httpExceptions)) {
+                return new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+            }
+
+            return new ($this->httpExceptions[(int) $exception->getStatusCode()])(
+                message: $exception->getMessage(),
+                code: $exception->getCode(),
+                previous: $exception,
+            );
+        }
 
         return new AppException($exception->getMessage(), $exception->getCode(), $exception);
     }

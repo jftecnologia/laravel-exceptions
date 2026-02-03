@@ -10,7 +10,6 @@ use Throwable;
 class GatewayTimeoutHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class GatewayTimeoutHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 504,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.gateway_timeout', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.gateway_timeout', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.gateway_timeout');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.gateway_timeout');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }

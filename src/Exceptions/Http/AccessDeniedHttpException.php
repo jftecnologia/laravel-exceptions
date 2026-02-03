@@ -10,7 +10,6 @@ use Throwable;
 class AccessDeniedHttpException extends HttpException
 {
     public function __construct(
-        string $resource,
         string $message = '',
         int|string $code = 0,
         ?Throwable $previous = null,
@@ -18,9 +17,9 @@ class AccessDeniedHttpException extends HttpException
         string $userMessage = '',
         int $statusCode = 403,
     ) {
-        $message = $message ?: __('laravel-exceptions::exceptions.system.http.access_denied', ['resource' => $resource]);
-        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.access_denied', ['resource' => $resource]);
+        $message = $message ?: __('laravel-exceptions::exceptions.system.http.access_denied');
+        $userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.http.access_denied');
 
-        parent::__construct($resource, $message, $code, $previous, $context, $userMessage, $statusCode);
+        parent::__construct($message, $code, $previous, $context, $userMessage, $statusCode);
     }
 }
