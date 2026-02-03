@@ -66,17 +66,17 @@
 
                 <!-- Link de suporte adicional -->
                 <div class="space-y-2 border-t border-border pt-6 text-center">
-                    <p class="text-sm text-muted-foreground">
+                    {{-- <p class="text-sm text-muted-foreground">
                         {{ __('laravel-exceptions::messages.need_help') }}
-                        <a href="mailto:{{ config('app.support_contact_email') }}?subject=Suporte%20-%20Erro%20{{ $code ?? '' }}&body=Código%20do%20Erro:%20{{ $code ?? 'N/A' }}%0D%0AMensagem:%20{{ $message ?? 'N/A' }}%0D%0A"
+                        <a href="mailto:{{ config('app.support_contact_email') }}?subject=Suporte%20-%20Erro%20{{ $errorId ?? '' }}&body=Código%20do%20Erro:%20{{ $errorId ?? 'N/A' }}%0D%0AMensagem:%20{{ $message ?? 'N/A' }}%0D%0A"
                             class="text-primary hover:underline">
                             {{ __('laravel-exceptions::messages.contact_support') }}
                         </a>
-                    </p>
+                    </p> --}}
 
-                    @isset($code)
+                    @isset($errorId)
                         <p class="text-sm text-foreground">
-                            {{ __('laravel-exceptions::messages.error_code', ['code' => $code]) }}
+                            {{ __('laravel-exceptions::messages.error_code', ['code' => $errorId]) }}
                         </p>
                     @endisset
                 </div>

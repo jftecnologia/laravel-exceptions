@@ -6,9 +6,8 @@ namespace JuniorFontenele\LaravelExceptions\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use JuniorFontenele\LaravelExceptions\Contracts\ExceptionModel;
 
-class Exception extends Model implements ExceptionModel
+class Exception extends Model
 {
     protected static function booted(): void
     {
@@ -17,7 +16,7 @@ class Exception extends Model implements ExceptionModel
 
     public function getTable(): string
     {
-        return config('laravel-exceptions.table_name', parent::getTable());
+        return config('laravel-exceptions.channels_settings.database.table_name', parent::getTable());
     }
 
     protected function casts(): array

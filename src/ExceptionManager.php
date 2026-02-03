@@ -6,6 +6,7 @@ namespace JuniorFontenele\LaravelExceptions;
 
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionChannel;
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionContext;
 use JuniorFontenele\LaravelExceptions\Exceptions\AppException;
@@ -21,6 +22,8 @@ class ExceptionManager
     protected array $channels = [];
 
     protected array $context = [];
+
+    protected bool $hasBuiltContext = false;
 
     public function __construct(
         protected array $ignoredExceptions = [],
@@ -46,6 +49,8 @@ class ExceptionManager
     {
         $this->context = [];
 
+        Log::debug('CHAMOU BUILD CONTEXT');
+
         foreach ($this->contextProviders as $provider) {
             if ($provider->shouldRun($exception)) {
                 $this->context = array_merge($this->context, $provider->getContext($exception));
@@ -53,6 +58,8 @@ class ExceptionManager
         }
 
         $this->context = array_merge($this->context, $exception->context());
+
+        $this->hasBuiltContext = true;
 
         return $this;
     }
@@ -62,7 +69,7 @@ class ExceptionManager
         return $this->context;
     }
 
-    public function sendToChannels(): void
+    protected function sendToChannels(): void
     {
         foreach ($this->channels as $channel) {
             $channel->send($this->context);
@@ -78,7 +85,11 @@ class ExceptionManager
 
             $convertedException = $this->convertException($e);
 
-            $this->buildContext($convertedException);
+            if (! $this->hasBuiltContext) {
+                $this->buildContext($convertedException);
+            }
+
+            Log::debug('CHAMOU RENDER');
 
             return response()->view($this->errorView, [
                 'errorId' => $convertedException->getErrorId(),
@@ -94,8 +105,13 @@ class ExceptionManager
 
             $convertedException = $this->convertException($e);
 
-            $this->buildContext($convertedException);
+            if (! $this->hasBuiltContext) {
+                $this->buildContext($convertedException);
+            }
 
+            Log::debug('CHAMOU REPORT');
+
+            $this->sendToChannels();
             // throw $convertedException;
             // $this->logExceptionToDatabase($e);
         });
@@ -107,7 +123,11 @@ class ExceptionManager
 
             $convertedException = $this->convertException($e);
 
-            $this->buildContext($convertedException);
+            if (! $this->hasBuiltContext) {
+                $this->buildContext($convertedException);
+            }
+
+            Log::debug('CHAMOU CONTEXT');
 
             return $convertedException->context();
         });

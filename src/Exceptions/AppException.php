@@ -21,7 +21,7 @@ class AppException extends Exception
 
     public function __construct(
         string $message = '',
-        int $code = 0,
+        int|string $code = 0,
         ?Throwable $previous = null,
         array $context = [],
         string $userMessage = '',
@@ -32,7 +32,7 @@ class AppException extends Exception
         $this->userMessage = $userMessage ?: __('laravel-exceptions::exceptions.user.app');
         $this->statusCode = $statusCode;
 
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, (int) $code, $previous);
     }
 
     public function withContext(array $context): static

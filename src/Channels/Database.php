@@ -4,51 +4,50 @@ declare(strict_types = 1);
 
 namespace JuniorFontenele\LaravelExceptions\Channels;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use JuniorFontenele\LaravelExceptions\Contracts\ExceptionChannel;
-use JuniorFontenele\LaravelExceptions\Contracts\ExceptionModel;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class Database implements ExceptionChannel
 {
-    public function __construct(protected ExceptionModel $exceptionModel)
-    {
+    public function __construct(
+        protected Model $exceptionModel,
+        protected LoggerInterface $logger
+    ) {
         //
     }
 
     public function send(array $context): void
     {
         try {
-            $this->exceptionModel->fill([
-                'error_id' => Arr::get($context, 'errorId'),
-                'exception_class' => Arr::get($context, 'exceptionClass'),
+            $this->exceptionModel->create([
+                'exception_class' => Arr::get($context, 'exception_class'),
                 'message' => Arr::get($context, 'message'),
-                'user_message' => Arr::get($context, 'userMessage'),
+                'user_message' => Arr::get($context, 'user_message'),
                 'file' => Arr::get($context, 'file'),
                 'line' => Arr::get($context, 'line'),
                 'code' => Arr::get($context, 'code'),
-                'status_code' => Arr::get($context, 'statusCode'),
-                'is_retryable' => Arr::get($context, 'isRetryable'),
-
-                // Context data
-                'app_version' => Arr::get($context, 'app.version'),
-                'app_env' => Arr::get($context, 'app.env'),
-                'correlation_id' => Arr::get($context, 'correlation_id'),
-                'request_id' => Arr::get($context, 'request_id'),
-                'user_id' => Arr::get($context, 'user.id'),
-                // JSON fields
-                'context' => $context,
-                'stack_trace' => $this->getTraceAsString(),
-                'previous_exception' => $this->getPrevious() ? [
-                    'class' => get_class($this->getPrevious()),
-                    'message' => $this->getPrevious()->getMessage(),
-                ] : null,
+                'status_code' => Arr::get($context, 'status_code'),
+                'error_id' => Arr::get($context, 'error_id'),
+                'app_env' => Arr::get($context, 'app_env'),
+                'host_name' => Arr::get($context, 'host_name'),
+                'host_ip' => Arr::get($context, 'host_ip'),
+                'user_id' => Arr::get($context, 'user_id'),
+                'is_retryable' => Arr::get($context, 'is_retryable'),
+                'stack_trace' => Arr::get($context, 'stack_trace'),
+                'context' => Arr::get($context, 'context'),
+                'previous_exception_class' => Arr::get($context, 'previous_exception_class'),
+                'previous_message' => Arr::get($context, 'previous_message'),
+                'previous_file' => Arr::get($context, 'previous_file'),
+                'previous_line' => Arr::get($context, 'previous_line'),
+                'previous_code' => Arr::get($context, 'previous_code'),
+                'previous_stack_trace' => Arr::get($context, 'previous_stack_trace'),
             ]);
-
-            $this->exceptionModel->save();
         } catch (Throwable $e) {
             // Falha silenciosa para não quebrar a aplicação
-            logger()->error('Failed to save exception to database', [
+            $this->logger->error('Failed to save exception to database', [
                 'error' => $e->getMessage(),
             ]);
         }

@@ -4,10 +4,12 @@ declare(strict_types = 1);
 
 namespace JuniorFontenele\LaravelExceptions;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use JuniorFontenele\LaravelExceptions\Channels\Database;
 use JuniorFontenele\LaravelExceptions\Console\Commands\InstallCommand;
-use JuniorFontenele\LaravelExceptions\Contracts\ExceptionModel;
+use JuniorFontenele\LaravelExceptions\Models\Exception;
+use Psr\Log\LoggerInterface;
 
 class LaravelExceptionsServiceProvider extends ServiceProvider
 {
@@ -63,39 +65,34 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
-        $this->app->bind(ExceptionModel::class, function ($app) {
-            $modelClass = $app->make('config')->get('laravel-exceptions.channels_settings.database.model');
+        $this->app->singleton(function (Application $app): Database {
+            $exceptionModelClass = $app['config']->get('laravel-exceptions.channels_settings.database.model', Exception::class);
 
-            if (! is_string($modelClass)) {
-                throw new \RuntimeException('The exception_model configuration must be a valid class name.');
-            }
+            $exceptionModel = $app->make($exceptionModelClass);
 
-            if (! class_exists($modelClass)) {
-                throw new \RuntimeException("The exception model class {$modelClass} does not exist.");
-            }
-
-            if (! is_subclass_of($modelClass, Model::class)) {
-                throw new \RuntimeException("The exception model class {$modelClass} must extend " . Model::class . '.');
-            }
-
-            /** @var class-string<Model> $modelClass */
-            return new $modelClass();
+            return new Database(
+                exceptionModel: $exceptionModel,
+                logger: $app->make(LoggerInterface::class),
+            );
         });
 
-        $this->app->singleton(function ($app): ExceptionManager {
-            $config = $app->make('config')->get('laravel-exceptions');
+        $this->app->singleton(function (Application $app): ExceptionManager {
+            $ignoredExceptions = $app['config']->get('laravel-exceptions.ignored_exceptions', []);
+            $errorView = $app['config']->get('laravel-exceptions.view', 'laravel-exceptions::error');
+            $contextProviders = $app['config']->get('laravel-exceptions.context_providers', []);
+            $channels = $app['config']->get('laravel-exceptions.channels', []);
 
             $manager = new ExceptionManager(
-                ignoredExceptions: $config['ignored_exceptions'],
-                errorView: $config['view'],
+                ignoredExceptions: $ignoredExceptions,
+                errorView: $errorView,
             );
 
-            foreach ($config['context_providers'] as $providerClass) {
+            foreach ($contextProviders as $providerClass) {
                 $provider = $app->make($providerClass);
                 $manager->addContextProvider($provider);
             }
 
-            foreach ($config['channels'] as $channelClass) {
+            foreach ($channels as $channelClass) {
                 $channel = $app->make($channelClass);
                 $manager->addChannel($channel);
             }
