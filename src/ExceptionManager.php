@@ -168,7 +168,13 @@ class ExceptionManager
                 return new HttpException($exception->getMessage(), $exception->getCode(), $exception);
             }
 
-            return new ($this->httpExceptions[(int) $exception->getStatusCode()])(
+            $customExceptionClass = $this->httpExceptions[(int) $exception->getStatusCode()];
+
+            if (! class_exists($customExceptionClass) || ! is_subclass_of($customExceptionClass, HttpException::class)) {
+                return new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+            }
+
+            return new $customExceptionClass(
                 message: $exception->getMessage(),
                 code: $exception->getCode(),
                 previous: $exception,
