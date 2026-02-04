@@ -108,6 +108,33 @@ throw new UnauthorizedHttpException('Access denied');
 
 Available classes: `BadRequestHttpException`, `UnauthorizedHttpException`, `AccessDeniedHttpException`, `NotFoundHttpException`, `MethodNotAllowedHttpException`, `SessionExpiredHttpException`, `UnprocessableEntityHttpException`, `TooManyRequestsHttpException`, `InternalServerErrorHttpException`, `ServiceUnavailableHttpException`, `GatewayTimeoutHttpException`.
 
+### Cleaning Old Exception Records
+
+Use the clean command to remove old exception records from the database:
+
+```bash
+# Clean records using the default retention period (configured in config file)
+php artisan laravel-exceptions:clean
+
+# Clean records older than a specific number of days
+php artisan laravel-exceptions:clean --days=90
+
+# Force execution in production without confirmation
+php artisan laravel-exceptions:clean --force
+```
+
+The retention period defaults to 365 days but can be configured via the `delete_records_older_than_days` setting.
+
+**Recommended:** Schedule this command to run daily by adding it to your `routes/console.php`:
+
+```php
+use Illuminate\Support\Facades\Schedule;
+
+Schedule::command('laravel-exceptions:clean --force')
+    ->daily()
+    ->onOneServer();
+```
+
 ## Configuration
 
 Main options in `config/laravel-exceptions.php`:
@@ -118,14 +145,22 @@ return [
     'view' => 'laravel-exceptions::error',
     
     // Convert unhandled exceptions to AppException
-    'convert_exceptions' => true,
+    'convert_exceptions' => env('LARAVEL_EXCEPTIONS_CONVERT_EXCEPTIONS', true),
     
     // Render custom exceptions even in debug mode
-    'render_in_debug' => false,
+    'render_in_debug' => env('LARAVEL_EXCEPTIONS_RENDER_IN_DEBUG', false),
+    
+    // Days to keep exception records (used by clean command)
+    'delete_records_older_than_days' => 365,
     
     // Automatic context providers
     'context_providers' => [
-        // AppExceptionContextProvider, UserContextProvider, etc.
+        AppExceptionContextProvider::class,
+        AppContextProvider::class,
+        HostContextProvider::class,
+        UserContextProvider::class,
+        ExceptionContextProvider::class,
+        PreviousExceptionContextProvider::class,
     ],
     
     // Storage channels
@@ -133,13 +168,46 @@ return [
         'database' => Database::class,
     ],
     
-    // Ignored exceptions
+    // Channel-specific settings
+    'channels_settings' => [
+        'database' => [
+            'table_name' => 'exceptions_log',
+            'model' => Exception::class,
+            'user_model' => config('auth.providers.users.model'),
+            'user_model_table' => 'users',
+        ],
+    ],
+    
+    // Ignored exceptions (won't be logged or converted)
     'ignored_exceptions' => [
         AuthenticationException::class,
         ValidationException::class,
     ],
+    
+    // HTTP exception mappings
+    'http_exceptions' => [
+        400 => BadRequestHttpException::class,
+        401 => UnauthorizedHttpException::class,
+        403 => AccessDeniedHttpException::class,
+        404 => NotFoundHttpException::class,
+        // ... more status codes
+    ],
 ];
 ```
+
+### Configuration Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `view` | `laravel-exceptions::error` | Blade view used for displaying exceptions |
+| `convert_exceptions` | `true` | Convert unhandled exceptions to AppException automatically |
+| `render_in_debug` | `false` | Render custom exception views even when `APP_DEBUG=true` |
+| `delete_records_older_than_days` | `365` | Number of days to retain exception records (used by clean command) |
+| `context_providers` | Array | Classes that provide additional context for exceptions |
+| `channels` | Array | Storage channels for logging exceptions |
+| `channels_settings` | Array | Channel-specific configuration options |
+| `ignored_exceptions` | Array | Exception classes that should not be logged or converted |
+| `http_exceptions` | Array | Mapping of HTTP status codes to exception classes |
 
 ## Automatic Context
 
