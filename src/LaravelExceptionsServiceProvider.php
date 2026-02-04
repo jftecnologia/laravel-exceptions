@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelExceptions\Channels\Database;
 use JuniorFontenele\LaravelExceptions\Console\Commands\AppExceptionMakeCommand;
+use JuniorFontenele\LaravelExceptions\Console\Commands\ExceptionCleanCommand;
 use JuniorFontenele\LaravelExceptions\Console\Commands\InstallCommand;
 use JuniorFontenele\LaravelExceptions\Models\Exception;
 use Psr\Log\LoggerInterface;
@@ -53,6 +54,7 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
             $this->commands([
                 InstallCommand::class,
                 AppExceptionMakeCommand::class,
+                ExceptionCleanCommand::class,
             ]);
         }
     }
@@ -83,10 +85,6 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(function (Application $app): ExceptionManager {
-            $shouldConvertExceptions = $app['config']->boolean('laravel-exceptions.convert_exceptions', true);
-            $shouldRenderInDebug = $app['config']->boolean('laravel-exceptions.render_in_debug', false);
-            $ignoredExceptions = $app['config']->get('laravel-exceptions.ignored_exceptions', []);
-            $errorView = $app['config']->get('laravel-exceptions.view', 'laravel-exceptions::error');
             $contextProviders = $app['config']->get('laravel-exceptions.context_providers', []);
             $channels = $app['config']->get('laravel-exceptions.channels', []);
             $config = $app['config']->get('laravel-exceptions', []);

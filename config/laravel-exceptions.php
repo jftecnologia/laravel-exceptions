@@ -9,6 +9,8 @@ return [
 
     'render_in_debug' => env('LARAVEL_EXCEPTIONS_RENDER_IN_DEBUG', false),
 
+    'delete_records_older_than_days' => 365,
+
     'context_providers' => [
         JuniorFontenele\LaravelExceptions\Providers\AppExceptionContextProvider::class,
         JuniorFontenele\LaravelExceptions\Providers\AppContextProvider::class,
