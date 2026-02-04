@@ -1,7 +1,17 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "juniorfontenele/laravel-exceptions",
-    "description": "Exceptions on steroids for Laravel",
+    "description": "Advanced exception management for Laravel with enriched context, multiple logging channels, and user-friendly error messages",
+    "keywords": [
+        "laravel",
+        "exceptions",
+        "error-handling",
+        "logging",
+        "context",
+        "error-messages",
+        "exception-handler",
+        "laravel-package"
+    ],
     "homepage": "https://github.com/juniorfontenele/laravel-exceptions",
     "type": "library",
     "license": "MIT",
