@@ -1,9 +1,9 @@
 # Laravel Exceptions
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/juniorfontenele/laravel-exceptions.svg?style=flat-square)](https://packagist.org/packages/juniorfontenele/laravel-exceptions)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/juniorfontenele/laravel-exceptions/tests.yml?branch=master&label=tests&style=flat-square)](https://github.com/juniorfontenele/laravel-exceptions/actions?query=workflow%3Atests+branch%3Amaster)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/juniorfontenele/laravel-exceptions/fix-php-code-style.yml?branch=master&label=code%20style&style=flat-square)](https://github.com/juniorfontenele/laravel-exceptions/actions?query=workflow%3A"fix-php-code-style-issues"+branch%3Amaster)
-[![Total Downloads](https://img.shields.io/packagist/dt/juniorfontenele/laravel-exceptions.svg?style=flat-square)](https://packagist.org/packages/juniorfontenele/laravel-exceptions)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/jftecnologia/laravel-exceptions.svg?style=flat-square)](https://packagist.org/packages/jftecnologia/laravel-exceptions)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/jftecnologia/laravel-exceptions/tests.yml?branch=master&label=tests&style=flat-square)](https://github.com/jftecnologia/laravel-exceptions/actions?query=workflow%3Atests+branch%3Amaster)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jftecnologia/laravel-exceptions/fix-php-code-style.yml?branch=master&label=code%20style&style=flat-square)](https://github.com/jftecnologia/laravel-exceptions/actions?query=workflow%3A"fix-php-code-style-issues"+branch%3Amaster)
+[![Total Downloads](https://img.shields.io/packagist/dt/jftecnologia/laravel-exceptions.svg?style=flat-square)](https://packagist.org/packages/jftecnologia/laravel-exceptions)
 
 Advanced exception management system for Laravel with enriched context, multiple logging channels, and customized user-facing messages.
 
@@ -20,7 +20,7 @@ Advanced exception management system for Laravel with enriched context, multiple
 ## Installation
 
 ```bash
-composer require juniorfontenele/laravel-exceptions
+composer require jftecnologia/laravel-exceptions
 ```
 
 ### Quick Install (Recommended)
@@ -231,7 +231,7 @@ composer test
 
 ## Credits
 
-- [Junior Fontenele](https://github.com/juniorfontenele)
+- [Junior Fontenele](https://github.com/jftecnologia)
 
 ## License
 
