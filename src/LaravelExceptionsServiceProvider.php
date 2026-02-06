@@ -37,7 +37,7 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
         ], 'laravel-exceptions-views');
 
         $this->publishes([
-            __DIR__ . '/../resources/dist/css/app.css' => public_path('vendor/juniorfontenele/laravel-exceptions/css/app.css'),
+            __DIR__ . '/../resources/dist/css/app.css' => public_path('vendor/jftecnologia/laravel-exceptions/css/app.css'),
         ], 'laravel-exceptions-assets');
 
         $this->publishes([

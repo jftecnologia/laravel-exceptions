@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "juniorfontenele/laravel-exceptions",
+    "name": "jftecnologia/laravel-exceptions",
     "description": "Advanced exception management for Laravel with enriched context, multiple logging channels, and user-friendly error messages",
     "keywords": [
         "laravel",
@@ -12,7 +12,7 @@
         "exception-handler",
         "laravel-package"
     ],
-    "homepage": "https://github.com/juniorfontenele/laravel-exceptions",
+    "homepage": "https://github.com/jftecnologia/laravel-exceptions",
     "type": "library",
     "license": "MIT",
     "autoload": {
