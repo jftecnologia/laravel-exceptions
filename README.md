@@ -33,6 +33,24 @@ php artisan laravel-exceptions:install
 
 This will guide you through publishing assets, migrations, configuration, and running migrations.
 
+**After installation**, you must register the exception handler in your `bootstrap/app.php` file:
+
+```php
+use JuniorFontenele\LaravelExceptions\Facades\LaravelException;
+
+return Application::configure(basePath: dirname(__DIR__))
+    // ... other configurations
+    ->withExceptions(function (Exceptions $exceptions) {
+        // ... other exception handlers
+        
+        // Register Laravel Exceptions handler (must be the last handler)
+        LaravelException::handles($exceptions);
+    })
+    ->create();
+```
+
+**Note:** The `LaravelException::handles()` call must be placed as the **last handler** in the `withExceptions` method to ensure it properly catches all exceptions.
+
 ### Manual Installation
 
 **Important:** You must publish the package assets before using it:
@@ -59,6 +77,24 @@ Optionally, publish views (if you want to customize them):
 ```bash
 php artisan vendor:publish --tag="laravel-exceptions-views"
 ```
+
+**After publishing**, you must register the exception handler in your `bootstrap/app.php` file:
+
+```php
+use JuniorFontenele\LaravelExceptions\Facades\LaravelException;
+
+return Application::configure(basePath: dirname(__DIR__))
+    // ... other configurations
+    ->withExceptions(function (Exceptions $exceptions) {
+        // ... other exception handlers
+        
+        // Register Laravel Exceptions handler (must be the last handler)
+        LaravelException::handles($exceptions);
+    })
+    ->create();
+```
+
+**Note:** The `LaravelException::handles()` call must be placed as the **last handler** in the `withExceptions` method to ensure it properly catches all exceptions.
 
 ## Usage
 
