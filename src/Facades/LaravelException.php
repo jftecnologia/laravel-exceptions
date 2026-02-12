@@ -6,7 +6,7 @@ namespace JuniorFontenele\LaravelExceptions\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class ExceptionHandler extends Facade
+class LaravelException extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
