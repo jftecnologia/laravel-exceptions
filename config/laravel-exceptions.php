@@ -3,14 +3,19 @@
 declare(strict_types = 1);
 
 return [
+    // Custom view to render exceptions
     'view' => 'laravel-exceptions::error',
 
+    // Convert unhandled exceptions to AppException
     'convert_exceptions' => env('LARAVEL_EXCEPTIONS_CONVERT_EXCEPTIONS', true),
 
+    // Render exception view even in debug mode
     'render_in_debug' => env('LARAVEL_EXCEPTIONS_RENDER_IN_DEBUG', false),
 
+    // Delete records older than specified days
     'delete_records_older_than_days' => 365,
 
+    // Automatic context providers to be used when logging exceptions
     'context_providers' => [
         JuniorFontenele\LaravelExceptions\Providers\AppExceptionContextProvider::class,
         JuniorFontenele\LaravelExceptions\Providers\AppContextProvider::class,
@@ -20,10 +25,12 @@ return [
         JuniorFontenele\LaravelExceptions\Providers\PreviousExceptionContextProvider::class,
     ],
 
+    // Channels to be used for logging exceptions
     'channels' => [
         'database' => JuniorFontenele\LaravelExceptions\Channels\Database::class,
     ],
 
+    // Settings for each channel
     'channels_settings' => [
         'database' => [
             'table_name' => 'exceptions_log',
@@ -33,11 +40,13 @@ return [
         ],
     ],
 
+    // Exceptions that should not be logged or converted to AppException
     'ignored_exceptions' => [
         Illuminate\Auth\AuthenticationException::class,
         Illuminate\Validation\ValidationException::class,
     ],
 
+    // HTTP exceptions mapping
     'http_exceptions' => [
         400 => JuniorFontenele\LaravelExceptions\Exceptions\Http\BadRequestHttpException::class,
         401 => JuniorFontenele\LaravelExceptions\Exceptions\Http\UnauthorizedHttpException::class,
