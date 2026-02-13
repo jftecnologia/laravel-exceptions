@@ -53,13 +53,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
 ### Manual Installation
 
-**Important:** You must publish the package assets before using it:
+**Important:** You must publish the package assets and migrations before using it:
 
 ```bash
 php artisan vendor:publish --tag="laravel-exceptions-assets"
 ```
-
-Optionally, publish and run migrations (if you want to customize them):
 
 ```bash
 php artisan vendor:publish --tag="laravel-exceptions-migrations"

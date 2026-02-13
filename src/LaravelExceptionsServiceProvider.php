@@ -71,8 +71,6 @@ class LaravelExceptionsServiceProvider extends ServiceProvider
             'laravel-exceptions'
         );
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
         $this->app->singleton(function (Application $app): Database {
             $exceptionModelClass = $app['config']->get('laravel-exceptions.channels_settings.database.model', Exception::class);
 
